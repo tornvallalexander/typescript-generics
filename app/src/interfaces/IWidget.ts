@@ -1,4 +1,3 @@
-
 interface IWidget {
   title: string
   description: string

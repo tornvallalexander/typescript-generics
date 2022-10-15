@@ -10,17 +10,12 @@ const SearchInput = ({ setSearchQuery }: SearchInputProps) => {
   const debouncedQuery = useDebounce(query, 250)
 
   useEffect(() => {
-     setSearchQuery(debouncedQuery)
+    setSearchQuery(debouncedQuery)
   }, [debouncedQuery, setSearchQuery])
   return (
     <div>
-      <label htmlFor="search">
-        Search...
-      </label>
-      <input
-        type="search"
-        onChange={(e) => setQuery(e.target.value)}
-      />
+      <label htmlFor="search">Search...</label>
+      <input type="search" onChange={(e) => setQuery(e.target.value)} />
     </div>
   )
 }

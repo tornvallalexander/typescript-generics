@@ -4,28 +4,47 @@ import people from './mock-data/people'
 import { genericSearch } from './util/generic-search'
 import { SearchInput } from './components/search-input'
 import { genericSort } from './util/generic-sort'
+import { IProperty } from './interfaces/IProperty'
+import { IWidget } from './interfaces/IWidget'
+import { IPerson } from './interfaces/IPerson'
+import { SortInput } from './components/sort-input'
 
 function App() {
   const [query, setQuery] = useState('')
+  const [widgetSortProperty, setWidgetSortProperty] = useState<
+    IProperty<IWidget>
+  >({ property: 'title' })
+  const [peopleSortProperty, setPeopleSortProperty] = useState<
+    IProperty<IPerson>
+  >({ property: 'firstName' })
   return (
     <div>
       <SearchInput setSearchQuery={setQuery} />
       <h3>Widgets</h3>
+      <SortInput
+        object={widgets[0]}
+        setProperty={(property) => setWidgetSortProperty({ property })}
+      />
       {widgets
         .filter((widget) =>
           genericSearch(widget, ['title', 'description'], query)
         )
-        .sort((a, b) => genericSort(a, b, 'title'))
+        .sort((a, b) => genericSort(a, b, widgetSortProperty.property))
         .map((widget) => (
           <p>{widget.title}</p>
         ))}
       <br />
       <br />
       <h3>People</h3>
+      <SortInput
+        object={people[0]}
+        setProperty={(property) => setPeopleSortProperty({ property })}
+      />
       {people
         .filter((person) =>
           genericSearch(person, ['firstName', 'lastName'], query)
         )
+        .sort((a, b) => genericSort(a, b, peopleSortProperty.property))
         .map((person) => (
           <p>{person.firstName + ' ' + person.lastName}</p>
         ))}

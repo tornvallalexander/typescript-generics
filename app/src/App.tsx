@@ -8,6 +8,7 @@ import { IProperty } from './interfaces/IProperty'
 import { IWidget } from './interfaces/IWidget'
 import { IPerson } from './interfaces/IPerson'
 import { SortInput } from './components/sort-input'
+import { genericFilter } from './util/generic-filter'
 
 function App() {
   const [query, setQuery] = useState('')
@@ -17,6 +18,8 @@ function App() {
   const [peopleSortProperty, setPeopleSortProperty] = useState<
     IProperty<IPerson>
   >({ property: 'firstName', isDescending: false })
+  const [widgetFilterProperties] = useState<Array<keyof IWidget>>([])
+  const [peopleFilterProperties] = useState<Array<keyof IPerson>>([])
   return (
     <div>
       <SearchInput setSearchQuery={setQuery} />
@@ -29,6 +32,7 @@ function App() {
         .filter((widget) =>
           genericSearch(widget, ['title', 'description'], query)
         )
+        .filter((widget) => genericFilter(widget, widgetFilterProperties))
         .sort((a, b) => genericSort(a, b, widgetSortProperty))
         .map((widget) => (
           <p>{widget.title}</p>
@@ -44,6 +48,7 @@ function App() {
         .filter((person) =>
           genericSearch(person, ['firstName', 'lastName'], query)
         )
+        .filter((person) => genericFilter(person, peopleFilterProperties))
         .sort((a, b) => genericSort(a, b, peopleSortProperty))
         .map((person) => (
           <p>{person.firstName + ' ' + person.lastName}</p>

@@ -13,23 +13,23 @@ function App() {
   const [query, setQuery] = useState('')
   const [widgetSortProperty, setWidgetSortProperty] = useState<
     IProperty<IWidget>
-  >({ property: 'title' })
+  >({ property: 'title', isDescending: false })
   const [peopleSortProperty, setPeopleSortProperty] = useState<
     IProperty<IPerson>
-  >({ property: 'firstName' })
+  >({ property: 'firstName', isDescending: false })
   return (
     <div>
       <SearchInput setSearchQuery={setQuery} />
       <h3>Widgets</h3>
       <SortInput
         object={widgets[0]}
-        setProperty={(property) => setWidgetSortProperty({ property })}
+        setProperty={(property) => setWidgetSortProperty(property)}
       />
       {widgets
         .filter((widget) =>
           genericSearch(widget, ['title', 'description'], query)
         )
-        .sort((a, b) => genericSort(a, b, widgetSortProperty.property))
+        .sort((a, b) => genericSort(a, b, widgetSortProperty))
         .map((widget) => (
           <p>{widget.title}</p>
         ))}
@@ -38,13 +38,13 @@ function App() {
       <h3>People</h3>
       <SortInput
         object={people[0]}
-        setProperty={(property) => setPeopleSortProperty({ property })}
+        setProperty={(property) => setPeopleSortProperty(property)}
       />
       {people
         .filter((person) =>
           genericSearch(person, ['firstName', 'lastName'], query)
         )
-        .sort((a, b) => genericSort(a, b, peopleSortProperty.property))
+        .sort((a, b) => genericSort(a, b, peopleSortProperty))
         .map((person) => (
           <p>{person.firstName + ' ' + person.lastName}</p>
         ))}

@@ -1,24 +1,20 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import widgets from './mock-data/widgets';
+import people from './mock-data/people';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h3>Widgets</h3>
+      {widgets.map(widget => (
+        <p>{widget.title}</p>
+      ))}
+      <br />
+      <br />
+      <h3>People</h3>
+      {people.map(person => (
+        <p>{person.firstName}</p>
+      ))}
     </div>
   );
 }

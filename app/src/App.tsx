@@ -2,36 +2,27 @@ import React, { useState } from 'react'
 import widgets from './mock-data/widgets'
 import people from './mock-data/people'
 import { genericSearch } from './util/generic-search'
+import { SearchInput } from './components/search-input'
 
 function App() {
-  const [widgetQuery, setWidgetQuery] = useState('')
-  const [personQuery, setPersonQuery] = useState('')
+  const [query, setQuery] = useState('')
   return (
     <div>
-      <input
-        value={widgetQuery}
-        onChange={(e) => setWidgetQuery(e.target.value)}
-        placeholder="Search widgets"
-      />
+      <SearchInput setSearchQuery={setQuery} />
       <h3>Widgets</h3>
       {widgets
         .filter((widget) =>
-          genericSearch(widget, ['title', 'description'], widgetQuery)
+          genericSearch(widget, ['title', 'description'], query)
         )
         .map((widget) => (
           <p>{widget.title}</p>
         ))}
       <br />
       <br />
-      <input
-        value={personQuery}
-        onChange={(e) => setPersonQuery(e.target.value)}
-        placeholder="Search people"
-      />
       <h3>People</h3>
       {people
         .filter((person) =>
-          genericSearch(person, ['firstName', 'lastName'], personQuery)
+          genericSearch(person, ['firstName', 'lastName'], query)
         )
         .map((person) => (
           <p>{person.firstName + ' ' + person.lastName}</p>

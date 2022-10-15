@@ -3,6 +3,7 @@ import widgets from './mock-data/widgets'
 import people from './mock-data/people'
 import { genericSearch } from './util/generic-search'
 import { SearchInput } from './components/search-input'
+import { genericSort } from './util/generic-sort'
 
 function App() {
   const [query, setQuery] = useState('')
@@ -14,6 +15,7 @@ function App() {
         .filter((widget) =>
           genericSearch(widget, ['title', 'description'], query)
         )
+        .sort((a, b) => genericSort(a, b, 'title'))
         .map((widget) => (
           <p>{widget.title}</p>
         ))}

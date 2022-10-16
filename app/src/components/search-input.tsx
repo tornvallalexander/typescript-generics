@@ -1,21 +1,32 @@
 import { useEffect, useState } from 'react'
 import { useDebounce } from '../hooks/use-debounce'
+import { PropsWithChildrenFunction } from '../types/props-with-children-function'
+import { genericSearch } from '../util/generic-search'
 
-type SearchInputProps = {
-  setSearchQuery: (search: string) => void
+type SearchInputProps<T> = {
+  dataSource: T[]
+  searchKeys: Array<keyof T>
 }
 
-const SearchInput = ({ setSearchQuery }: SearchInputProps) => {
+const SearchInput = <T,>({
+  dataSource = [],
+  searchKeys,
+  children,
+}: PropsWithChildrenFunction<SearchInputProps<T>, T>) => {
   const [query, setQuery] = useState('')
   const debouncedQuery = useDebounce(query, 250)
 
   useEffect(() => {
-    setSearchQuery(debouncedQuery)
-  }, [debouncedQuery, setSearchQuery])
+    setQuery(debouncedQuery)
+  }, [debouncedQuery, setQuery])
   return (
     <div>
       <label htmlFor="search">Search...</label>
       <input type="search" onChange={(e) => setQuery(e.target.value)} />
+      {children &&
+        dataSource
+          .filter((item) => genericSearch(item, searchKeys, debouncedQuery))
+          .map((item) => children(item))}
     </div>
   )
 }

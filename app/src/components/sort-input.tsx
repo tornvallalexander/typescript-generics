@@ -1,8 +1,7 @@
 import { IProperty } from '../interfaces/IProperty'
-import { ReactNode, useState } from 'react'
+import { useState } from 'react'
 import { genericSort } from '../util/generic-sort'
-
-type PropsWithChildrenFunction<P, T> = P & { children?(item: T): ReactNode }
+import { PropsWithChildrenFunction } from '../types/props-with-children-function'
 
 interface SortInputProps<T extends Record<string, any>> {
   dataSource: T[]

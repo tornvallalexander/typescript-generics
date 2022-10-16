@@ -9,6 +9,7 @@ import { IWidget } from './interfaces/IWidget'
 import { IPerson } from './interfaces/IPerson'
 import { SortInput } from './components/sort-input'
 import { genericFilter } from './util/generic-filter'
+import { FilterInput } from './components/filter-input'
 
 function App() {
   const [query, setQuery] = useState('')
@@ -18,8 +19,10 @@ function App() {
   const [peopleSortProperty, setPeopleSortProperty] = useState<
     IProperty<IPerson>
   >({ property: 'firstName', isDescending: false })
-  const [widgetFilterProperties] = useState<Array<keyof IWidget>>([])
-  const [peopleFilterProperties] = useState<Array<keyof IPerson>>([])
+  const [widgetFilterProperties, setWidgetFilterProperties] = useState<
+    Array<keyof IWidget>
+  >([])
+  const [peopleFilterProperties, setPeopleFilterProperties] = useState<Array<keyof IPerson>>([])
   return (
     <div>
       <SearchInput setSearchQuery={setQuery} />
@@ -27,6 +30,18 @@ function App() {
       <SortInput
         object={widgets[0]}
         setProperty={(property) => setWidgetSortProperty(property)}
+      />
+      <br />
+      <FilterInput
+        object={widgets[0]}
+        properties={widgetFilterProperties}
+        onChangeFilter={(property) => {
+          widgetFilterProperties.includes(property)
+            ? setWidgetFilterProperties(
+                widgetFilterProperties.filter((prop) => prop !== property)
+              )
+            : setWidgetFilterProperties([...widgetFilterProperties, property])
+        }}
       />
       {widgets
         .filter((widget) =>
@@ -43,6 +58,18 @@ function App() {
       <SortInput
         object={people[0]}
         setProperty={(property) => setPeopleSortProperty(property)}
+      />
+      <br />
+      <FilterInput
+        object={people[0]}
+        properties={peopleFilterProperties}
+        onChangeFilter={(property) => {
+          peopleFilterProperties.includes(property)
+            ? setPeopleFilterProperties(
+              peopleFilterProperties.filter((prop) => prop !== property)
+            )
+            : setPeopleFilterProperties([...peopleFilterProperties, property])
+        }}
       />
       {people
         .filter((person) =>

@@ -16,7 +16,7 @@ function App() {
       </SortInput>
       <br />
       <FilterInput dataSource={widgets}>
-        {widget => <p>{widget.title}</p>}
+        {(widget) => <p>{widget.title}</p>}
       </FilterInput>
       <br />
       <br />
@@ -37,7 +37,11 @@ function App() {
       </SortInput>
       <br />
       <FilterInput dataSource={people}>
-        {person => <p>{person.firstName} {person.lastName}</p>}
+        {(person) => (
+          <p>
+            {person.firstName} {person.lastName}
+          </p>
+        )}
       </FilterInput>
     </div>
   )

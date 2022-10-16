@@ -1,22 +1,12 @@
+import { Fragment } from 'react'
 import { IProperty } from '../interfaces/IProperty'
-import { useState } from 'react'
-import { genericSort } from '../util/generic-sort'
-import { PropsWithChildrenFunction } from '../types/props-with-children-function'
 
-interface SortInputProps<T extends Record<string, any>> {
+interface SortInputProps<T> {
   dataSource: T[]
-  initialSortProperty: keyof T
+  setSortProperty: (property: IProperty<T>) => void
 }
 
-const SortInput = <T extends Record<string, any>>({
-  dataSource,
-  initialSortProperty,
-  children,
-}: PropsWithChildrenFunction<SortInputProps<T>, T>) => {
-  const [sortProperty, setSortProperty] = useState<IProperty<T>>({
-    property: initialSortProperty,
-    isDescending: true,
-  })
+const SortInput = <T,>({ dataSource, setSortProperty }: SortInputProps<T>) => {
   const object = dataSource.length > 0 ? dataSource[0] : {}
   return (
     <div>
@@ -26,24 +16,20 @@ const SortInput = <T extends Record<string, any>>({
         onChange={(e) => {
           const [property, strIsDescending] = e.target.value.split('-')
           const isDescending = strIsDescending === 'true'
-          setSortProperty({ property, isDescending })
+          setSortProperty({ property: property as keyof T, isDescending })
         }}
       >
-        {Object.keys(object).map((key) => (
-          <>
-            <option key={`${key}-true`} value={`${key}-true`}>
+        {Object.keys(object as Record<string, any>).map((key) => (
+          <Fragment key={key}>
+            <option value={`${key}-true`}>
               Sort by {key} descending!
             </option>
-            <option key={`${key}-false`} value={`${key}-false`}>
+            <option value={`${key}-false`}>
               Sort by {key} ascending!
             </option>
-          </>
+          </Fragment>
         ))}
       </select>
-      {children &&
-        dataSource
-          .sort((a, b) => genericSort(a, b, sortProperty))
-          .map((item) => children(item))}
     </div>
   )
 }

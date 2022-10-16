@@ -1,19 +1,16 @@
-import { useState } from 'react'
 import { IFilter } from '../interfaces/IFilter'
-import { genericFilter } from '../util/generic-filter'
-import { PropsWithChildrenFunction } from '../types/props-with-children-function'
 
-interface IFilterInputProps<T extends Record<string, any>> {
+interface IFilterInputProps<T> {
   dataSource: Array<T>
+  filterProperties: Array<IFilter<T>>
+  setFilterProperties: (property: Array<IFilter<T>>) => void
 }
 
-const FilterInput = <T extends Record<string, any>>({
+const FilterInput = <T,>({
   dataSource,
-  children,
-}: PropsWithChildrenFunction<IFilterInputProps<T>, T>) => {
-  const [filterProperties, setFilterProperties] = useState<Array<IFilter<T>>>(
-    []
-  )
+  filterProperties,
+  setFilterProperties,
+}: IFilterInputProps<T>) => {
   const object = dataSource.length > 0 ? dataSource[0] : {}
 
   const onChangeFilter = (property: IFilter<T>) => {
@@ -47,9 +44,9 @@ const FilterInput = <T extends Record<string, any>>({
       <div className="p-1 my-2">
         <label className="mt-3">Filters! Try us too!</label>
         <br />
-        {Object.keys(object).map((key) => {
+        {Object.keys(object as Record<string, any>).map((key) => {
           return (
-            <>
+            <div key={key}>
               <input
                 type="checkbox"
                 id={`${key}-true`}
@@ -85,14 +82,10 @@ const FilterInput = <T extends Record<string, any>>({
               />
               <label htmlFor={`${key}-false`}>'{key}' is falsy</label>
               <br />
-            </>
+            </div>
           )
         })}
       </div>
-      {children &&
-        dataSource
-          .filter((item) => genericFilter(item, filterProperties))
-          .map((item) => children(item))}
     </>
   )
 }

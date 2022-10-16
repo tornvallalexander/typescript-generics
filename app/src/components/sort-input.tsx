@@ -1,14 +1,24 @@
 import { IProperty } from '../interfaces/IProperty'
+import { ReactNode, useState } from 'react'
+import { genericSort } from '../util/generic-sort'
+
+type PropsWithChildrenFunction<P, T> = P & { children?(item: T): ReactNode }
 
 interface SortInputProps<T extends Record<string, any>> {
-  object: T
-  setProperty: (propertyType: IProperty<T>) => void
+  dataSource: T[]
+  initialSortProperty: keyof T
 }
 
 const SortInput = <T extends Record<string, any>>({
-  object,
-  setProperty,
-}: SortInputProps<T>) => {
+  dataSource,
+  initialSortProperty,
+  children,
+}: PropsWithChildrenFunction<SortInputProps<T>, T>) => {
+  const [sortProperty, setSortProperty] = useState<IProperty<T>>({
+    property: initialSortProperty,
+    isDescending: true,
+  })
+  const object = dataSource.length > 0 ? dataSource[0] : {}
   return (
     <div>
       <label htmlFor="sorters">Try me!</label>
@@ -17,7 +27,7 @@ const SortInput = <T extends Record<string, any>>({
         onChange={(e) => {
           const [property, strIsDescending] = e.target.value.split('-')
           const isDescending = strIsDescending === 'true'
-          setProperty({ property, isDescending })
+          setSortProperty({ property, isDescending })
         }}
       >
         {Object.keys(object).map((key) => (
@@ -31,6 +41,10 @@ const SortInput = <T extends Record<string, any>>({
           </>
         ))}
       </select>
+      {children &&
+        dataSource
+          .sort((a, b) => genericSort(a, b, sortProperty))
+          .map((item) => children(item))}
     </div>
   )
 }

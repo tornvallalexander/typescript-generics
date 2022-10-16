@@ -3,8 +3,6 @@ import widgets from './mock-data/widgets'
 import people from './mock-data/people'
 import { genericSearch } from './util/generic-search'
 import { SearchInput } from './components/search-input'
-import { genericSort } from './util/generic-sort'
-import { IProperty } from './interfaces/IProperty'
 import { IWidget } from './interfaces/IWidget'
 import { IPerson } from './interfaces/IPerson'
 import { SortInput } from './components/sort-input'
@@ -13,24 +11,19 @@ import { FilterInput } from './components/filter-input'
 
 function App() {
   const [query, setQuery] = useState('')
-  const [widgetSortProperty, setWidgetSortProperty] = useState<
-    IProperty<IWidget>
-  >({ property: 'title', isDescending: false })
-  const [peopleSortProperty, setPeopleSortProperty] = useState<
-    IProperty<IPerson>
-  >({ property: 'firstName', isDescending: false })
   const [widgetFilterProperties, setWidgetFilterProperties] = useState<
     Array<keyof IWidget>
   >([])
-  const [peopleFilterProperties, setPeopleFilterProperties] = useState<Array<keyof IPerson>>([])
+  const [peopleFilterProperties, setPeopleFilterProperties] = useState<
+    Array<keyof IPerson>
+  >([])
   return (
     <div>
       <SearchInput setSearchQuery={setQuery} />
       <h3>Widgets</h3>
-      <SortInput
-        object={widgets[0]}
-        setProperty={(property) => setWidgetSortProperty(property)}
-      />
+      <SortInput dataSource={widgets} initialSortProperty="title">
+        {(widget) => <p>{widget.title}</p>}
+      </SortInput>
       <br />
       <FilterInput
         object={widgets[0]}
@@ -48,17 +41,19 @@ function App() {
           genericSearch(widget, ['title', 'description'], query)
         )
         .filter((widget) => genericFilter(widget, widgetFilterProperties))
-        .sort((a, b) => genericSort(a, b, widgetSortProperty))
         .map((widget) => (
           <p>{widget.title}</p>
         ))}
       <br />
       <br />
       <h3>People</h3>
-      <SortInput
-        object={people[0]}
-        setProperty={(property) => setPeopleSortProperty(property)}
-      />
+      <SortInput dataSource={people} initialSortProperty="firstName">
+        {(person) => (
+          <p>
+            {person.firstName} {person.lastName}
+          </p>
+        )}
+      </SortInput>
       <br />
       <FilterInput
         object={people[0]}
@@ -66,8 +61,8 @@ function App() {
         onChangeFilter={(property) => {
           peopleFilterProperties.includes(property)
             ? setPeopleFilterProperties(
-              peopleFilterProperties.filter((prop) => prop !== property)
-            )
+                peopleFilterProperties.filter((prop) => prop !== property)
+              )
             : setPeopleFilterProperties([...peopleFilterProperties, property])
         }}
       />
@@ -76,7 +71,6 @@ function App() {
           genericSearch(person, ['firstName', 'lastName'], query)
         )
         .filter((person) => genericFilter(person, peopleFilterProperties))
-        .sort((a, b) => genericSort(a, b, peopleSortProperty))
         .map((person) => (
           <p>{person.firstName + ' ' + person.lastName}</p>
         ))}

@@ -1,20 +1,10 @@
-import React, { useState } from 'react'
 import widgets from './mock-data/widgets'
 import people from './mock-data/people'
 import { SearchInput } from './components/search-input'
-import { IWidget } from './interfaces/IWidget'
-import { IPerson } from './interfaces/IPerson'
 import { SortInput } from './components/sort-input'
-import { genericFilter } from './util/generic-filter'
 import { FilterInput } from './components/filter-input'
 
 function App() {
-  const [widgetFilterProperties, setWidgetFilterProperties] = useState<
-    Array<keyof IWidget>
-  >([])
-  const [peopleFilterProperties, setPeopleFilterProperties] = useState<
-    Array<keyof IPerson>
-  >([])
   return (
     <div>
       <SearchInput dataSource={widgets} searchKeys={['title', 'description']}>
@@ -25,22 +15,9 @@ function App() {
         {(widget) => <p>{widget.title}</p>}
       </SortInput>
       <br />
-      <FilterInput
-        object={widgets[0]}
-        properties={widgetFilterProperties}
-        onChangeFilter={(property) => {
-          widgetFilterProperties.includes(property)
-            ? setWidgetFilterProperties(
-                widgetFilterProperties.filter((prop) => prop !== property)
-              )
-            : setWidgetFilterProperties([...widgetFilterProperties, property])
-        }}
-      />
-      {widgets
-        .filter((widget) => genericFilter(widget, widgetFilterProperties))
-        .map((widget) => (
-          <p>{widget.title}</p>
-        ))}
+      <FilterInput dataSource={widgets}>
+        {widget => <p>{widget.title}</p>}
+      </FilterInput>
       <br />
       <br />
       <SearchInput dataSource={people} searchKeys={['firstName', 'lastName']}>
@@ -59,22 +36,9 @@ function App() {
         )}
       </SortInput>
       <br />
-      <FilterInput
-        object={people[0]}
-        properties={peopleFilterProperties}
-        onChangeFilter={(property) => {
-          peopleFilterProperties.includes(property)
-            ? setPeopleFilterProperties(
-                peopleFilterProperties.filter((prop) => prop !== property)
-              )
-            : setPeopleFilterProperties([...peopleFilterProperties, property])
-        }}
-      />
-      {people
-        .filter((person) => genericFilter(person, peopleFilterProperties))
-        .map((person) => (
-          <p>{person.firstName + ' ' + person.lastName}</p>
-        ))}
+      <FilterInput dataSource={people}>
+        {person => <p>{person.firstName} {person.lastName}</p>}
+      </FilterInput>
     </div>
   )
 }

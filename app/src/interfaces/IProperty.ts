@@ -1,5 +1,5 @@
 interface IProperty<T> {
-  property: keyof T
+  property: Extract<keyof T, string | number | Date>
   isDescending: boolean
 }
 

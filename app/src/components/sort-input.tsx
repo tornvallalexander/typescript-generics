@@ -16,7 +16,7 @@ const SortInput = <T,>({ dataSource, setSortProperty }: SortInputProps<T>) => {
         onChange={(e) => {
           const [property, strIsDescending] = e.target.value.split('-')
           const isDescending = strIsDescending === 'true'
-          setSortProperty({ property: property as keyof T, isDescending })
+          setSortProperty({ property: property as any, isDescending })
         }}
       >
         {Object.keys(object as Record<string, any>).map((key) => (
